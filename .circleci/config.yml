@@ -1,0 +1,41 @@
+# Python CircleCI 2.0 configuration file
+
+# Every config.yml starts with the CircleCI version number, used to issue warnings about breaking changes.
+version: 2
+# Jobs represent a single execution of the build and are defined by a collection of steps. If you have only one job, it must be called build.
+jobs:
+  # As mentioned before, build is the name of your job. You can have multiple jobs, in which case they need to have unique names.
+  build:
+    # The steps of a job occur in an environment called an executor. The common executor in CircleCI is a Docker container. It is a cloud-hosted execution environment but other options exist, like a macOS environment.
+    docker:
+      # We are using an image that has Python 3.7 preinstalled.
+      - image: circleci/python:3.7
+
+    # Your repository has to be checked out somewhere on the build server. The working directory represents the file path where the repository will be stored.
+    working_directory: ~/repo
+
+    # This key marks the start of a list of steps to be performed by the build server.
+    steps:
+      # The first step the server needs to do is check the source code out to the working directory. This is performed by a special step called checkout.
+      # Step 1: obtain repo from GitHub.  
+      - checkout
+      
+      # Step 2: create virtual env and install dependencies.
+      - run:
+          # The CircleCI user interface shows you every build step in the form of an expandable section. The title of the section is taken from the value associated with the name key.
+          name: install dependencies
+          # Executing command-line programs or commands is done inside the command key. 
+          # The actual shell commands will be nested within.
+          # This key represents the command to run via the shell. The | symbol specifices that what follows is a literal set of commands, one per line, exactly like you’d see in a shell/bash script.
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      
+      # Step 3: run linter and tests
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            flake8 --exclude=venv* --statistics
+            pytest -v --cov=calculator
