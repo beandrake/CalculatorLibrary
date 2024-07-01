@@ -8,8 +8,9 @@ jobs:
   build:
     # The steps of a job occur in an environment called an executor. The common executor in CircleCI is a Docker container. It is a cloud-hosted execution environment but other options exist, like a macOS environment.
     docker:
-      # We are using an image that has Python 3.7 preinstalled.
-      - image: cimg/python:3.12.4
+      # We are using an image that has Python preinstalled.
+      #   Note: need to update this?  See what images are available here: https://circleci.com/developer/images/image/cimg/python
+      - image: cimg/python:3.12.3
 
     # Your repository has to be checked out somewhere on the build server. The working directory represents the file path where the repository will be stored.
     working_directory: ~/repo
