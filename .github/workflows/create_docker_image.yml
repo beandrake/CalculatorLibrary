@@ -1,13 +1,17 @@
-# This workflow will build and push a Docker image when a PR is closed after merging
+# This workflow will build and push a Docker image to Docker Hub
 # For more information see: https://github.com/marketplace/actions/build-and-push-docker-images
 
 name: Docker
 
 on:
-  # only run when a PR is closed
-  pull_request:
-    branches: [ "main" ]
-    types:    [ "closed" ]
+  # only triggers when tags are pushed
+  push:
+    tags:
+      - **
+  # run when a PR is closed
+  ###pull_request:
+  ###  branches: [ "main" ]
+  ###  types:    [ "closed" ]
 
 permissions:
   contents: read
@@ -15,7 +19,7 @@ permissions:
 jobs:
   docker:
     # only run if the PR closed after merging
-    if: github.event.pull_request.merged == true
+    ###if: github.event.pull_request.merged == true
 
     runs-on: ubuntu-latest
 
