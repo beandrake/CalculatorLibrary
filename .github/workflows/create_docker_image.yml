@@ -4,10 +4,11 @@
 name: Docker
 
 on:
-  # only triggers when tags are pushed
+  # run when a tag is pushed
   push:
     tags:
-      - **
+      - v**.**.**
+  
   # run when a PR is closed
   ###pull_request:
   ###  branches: [ "main" ]
