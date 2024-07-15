@@ -22,8 +22,14 @@ jobs:
       run: echo ${{ steps.vars.outputs.semver }}
 
 
+
+    - name: Set flag whether to test Tags
+      id: tagVars
+      run: echo "testTags=0" >> $GITHUB_OUTPUT
+
     - name: Set up name and tag
       id:   nametag
+      if:   ${{ steps.tagVars.outputs.testTags }} == 1
       uses: docker/metadata-action@v5
       with:
         # list of Docker images to use as base name for tags
@@ -36,6 +42,7 @@ jobs:
 
     # Print my output to the log     
     - name: Print the output
+      if:   ${{ steps.tagVars.outputs.testTags }} == 1
       run: |
         echo ${{ steps.nametag.outputs.tags }}
         echo ${{ steps.nametag.outputs.labels }}
