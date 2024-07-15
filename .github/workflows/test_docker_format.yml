@@ -7,10 +7,18 @@ permissions:
   contents: read
 
 jobs:
-  testDockerFormat:
+  test-Docker-Format:
     runs-on: ubuntu-latest
 
     steps:
+
+    - name: Get version
+      id: vars
+      run: echo "semver=$(cat version.txt)" >> $GITHUB_OUTPUT
+
+    - name: Test version
+      run: echo ${{ steps.vars.outputs.semver }}
+
 
     - name: Set up name and tag
       id:   nametag
