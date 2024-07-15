@@ -31,9 +31,20 @@ jobs:
     - name: Checkout source code
       uses: actions/checkout@v4
 
-    - name: Get version
-      id: vars
+    - name: Get version from file
+      id: fileVars
       run: echo "semver=$(cat version.txt)" >> $GITHUB_OUTPUT
+
+    - name: Set up Docker metadata
+      id:   metaVars
+      uses: docker/metadata-action@v5
+      with:
+        # list of Docker images to use as base name for tags
+        images: |
+          ${{ secrets.DOCKERHUB_USERNAME }}/calc
+        # generate Docker tags based on the following events/attributes
+        tags: |
+          type=semver,pattern={{version}}        
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3  
@@ -48,7 +59,7 @@ jobs:
       uses: docker/build-push-action@v6.2.0
       with:
         push: true
-        # This uses the version we loaded from a file earlier
-        tags: ${{ steps.vars.outputs.semver }}
-        #labels: ${{ steps.nametag.outputs.labels }}
+        # This uses the version we loaded from a file earlier, and labels from the Docker metadata
+        tags: ${{ steps.fileVars.outputs.semver }}
+        labels: ${{ steps.metaVars.outputs.labels }}
         
